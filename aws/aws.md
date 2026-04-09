@@ -264,11 +264,34 @@ So:
 
 👉 **Prompt Engineering \= Designing better instructions for AI**
 
-## **Horizontal vs Vertical Scaling**
-- **Horizontal vs Vertical Scaling?**
-   - **Vertical (Scale Up)**: Adding more RAM/CPU to your existing server.
-   - **Horizontal (Scale Out)**: Adding more servers to your pool. AWS prefers this (using Auto Scaling).
-
 ## **Edge Location**
 - **What is an Edge Location?**
    - Small data centers used by **CloudFront** (CDN) to cache your content closer to the users, reducing latency.
+
+
+## **Load Balancer vs API Gateway?**
+
+**Answer:**
+
+* **Load Balancer (LB)**:
+    * **Purpose**: Distributes incoming network traffic across multiple backend servers to ensure no single server is overloaded.
+    * **Focus**: Availability and reliability at the network/transport layer (L4 or L7).
+* **API Gateway**:
+    * **Purpose**: A single entry point for all clients. It sits in front of microservices.
+    * **Focus**: High-level concerns like Authentication, Authorization, Rate Limiting, Request Transformation, and Protocol Translation (e.g., REST to gRPC).
+* **Key Difference**: A Load Balancer just routes traffic; an API Gateway "manages" the API requests with business logic (security, logging, etc.).
+
+
+
+
+##  **Horizontal vs Vertical Scaling?**
+
+**Answer:**
+
+* **Vertical Scaling (Scale Up)**:
+    * Adding more power (CPU, RAM) to an existing server.
+    * **Limit**: Eventually, you hit the hardware ceiling of a single machine.
+* **Horizontal Scaling (Scale Out)**:
+    * Adding more servers to the resource pool.
+    * **Benefit**: Practically limitless scaling and better fault tolerance.
+    * **Requirement**: Requires a Load Balancer and stateless application design.
