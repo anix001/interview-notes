@@ -1,65 +1,57 @@
+---
+layout: default
+title: Design Patterns
+nav_order: 10
+---
+
 # 🎨 Design Pattern Interview Questions
 
-## **1️⃣ What is Dependency Injection (DI) and why is it important?**
+Common architectural and behavioral patterns used in modern software development.
 
-**Answer:**
+---
 
-**Dependency Injection (DI)** is a pattern where an object receives its dependencies from an outside source rather than creating them itself.
+## 📑 Table of Contents
+- [MVC (Model-View-Controller)](#-mvc-model-view-controller)
+- [Design Pattern Classification](#-design-pattern-classification)
 
-* **Purpose**: Decouple objects and make them more flexible, testable, and maintainable.
-* **Benefits**:
-    * **Flexibility**: Easily swap out different implementations (e.g., a mock repository for testing).
-    * **Maintainability**: Centralize dependency management.
-    * **Testability**: Makes unit testing easier by allowing mock objects to be injected.
+---
 
-### **Example (Node.js)**
+## 🏗️ MVC (Model-View-Controller)
 
-**Without DI (Tightly Coupled)**:
-```javascript
-// Service directly imports the model, making it hard to test/replace
-import { User } from '../models/user.model.js';
+The **MVC** pattern is a structural design pattern that separates an application into three main components to achieve a "Separation of Concerns".
 
-export class UserService {
-  async createUser(data) {
-    return await User.create(data); 
-  }
-}
-```
+1. **Model:** Represents the data layer and business logic (e.g., Database schemas).
+2. **View:** The presentation layer (e.g., UI, JSON response).
+3. **Controller:** The intermediary that handles user input and coordinates between Model and View.
 
-**With DI (Decoupled)**:
-```javascript
-// Step 1: Inject the repository via constructor
-export class UserService {
-  constructor(userRepository) {
-    this.userRepository = userRepository;
-  }
-
-  async createUser(data) {
-    return await this.userRepository.create(data);
-  }
-}
-
-// Step 2: Pass dependency when initializing
-const userService = new UserService(userRepository);
-```
-
-## **2️⃣ What is the MVC (Model-View-Controller) pattern?**
-
-**Answer:**
-
-The **MVC** pattern is a structural design pattern that separates an application into three main components:
-
-1. **Model**: Represents the database logic and schema (e.g., MongoDB, PostgreSQL schemas).
-2. **View**: Handles the output or presentation layer (e.g., JSON responses, HTML templates).
-3. **Controller**: Contains the business logic, handles user input, and coordinates between the Model and View.
-
-### **Folder Structure Pattern**
+### Standard Folder Structure
 ```text
 src/
-├── models/       # Database schemas
-├── views/        # UI/Templates (optional for APIs)
-├── controllers/  # Route handlers
+├── models/       # Data schemas (Mongoose/Sequelize)
+├── controllers/  # Route handlers & Business logic
 ├── routes/       # Endpoint definitions
-├── services/     # Core business logic
+├── services/     # Reusable business logic/External API calls
 └── app.js        # Entry point
 ```
+
+---
+
+## 🧩 Design Pattern Classification
+
+### 1️⃣ Creational Patterns
+Focus on object creation mechanisms.
+* **Singleton:** Ensures a class has only one instance (e.g., DB connection).
+* **Factory:** Creates objects without specifying the exact class of object that will be created.
+
+### 2️⃣ Structural Patterns
+Focus on how classes and objects are composed.
+* **Adapter:** Allows incompatible interfaces to work together.
+* **Proxy:** Provides a placeholder for another object to control access.
+
+### 3️⃣ Behavioral Patterns
+Focus on communication between objects.
+* **Observer:** A one-to-many dependency where objects are notified of state changes (e.g., Event Listeners).
+* **Strategy:** Defines a family of algorithms and makes them interchangeable.
+
+> [!TIP]
+> **Interview Gold:** When talking about MVC, emphasize that it makes the code **Testable** and **Maintainable** by decoupling logic from presentation.
