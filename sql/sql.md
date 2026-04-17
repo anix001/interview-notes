@@ -4,6 +4,12 @@ title: SQL
 nav_order: 8
 ---
 
+---
+layout: default
+title: SQL
+nav_order: 8
+---
+
 # 💾 SQL Interview Questions
 
 Practical SQL queries, window functions, and optimization techniques for relational databases.
@@ -39,20 +45,18 @@ WHERE salary < (SELECT MAX(salary) FROM employees);
 
 ### **Using `LIMIT` and `OFFSET`:**
 ```sql
-SELECT DISTINCT salary
-FROM employees
-ORDER BY salary DESC
-LIMIT 1 OFFSET 1;
+SELECT email, COUNT(*)
+FROM users
+GROUP BY email
+HAVING COUNT(*) > 1;
 ```
 
 ### **Using `DENSE_RANK()`:**
 ```sql
-SELECT salary
-FROM (
-   SELECT salary, DENSE_RANK() OVER (ORDER BY salary DESC) AS rnk
-   FROM employees
-) t
-WHERE rnk = 2;
+SELECT e.name
+FROM employees e
+JOIN employees m ON e.manager_id = m.id
+WHERE e.salary > m.salary;
 ```
 
 ---

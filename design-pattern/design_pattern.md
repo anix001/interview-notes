@@ -4,6 +4,12 @@ title: Design Patterns
 nav_order: 10
 ---
 
+---
+layout: default
+title: Design Patterns
+nav_order: 10
+---
+
 # 🎨 Design Pattern Interview Questions
 
 Structural and behavioral design patterns for clean, maintainable, and testable code.
@@ -65,20 +71,19 @@ const userService = new UserService(userRepository);
 
 **Answer:**
 
-The **MVC** pattern is a structural design pattern that separates an application into three main components:
+The **MVC** pattern is a structural design pattern that separates an application into three main components to achieve a "Separation of Concerns".
 
-1. **Model**: Represents the database logic and schema (e.g., MongoDB, PostgreSQL schemas).
-2. **View**: Handles the output or presentation layer (e.g., JSON responses, HTML templates).
-3. **Controller**: Contains the business logic, handles user input, and coordinates between the Model and View.
+1. **Model:** Represents the data layer and business logic (e.g., Database schemas).
+2. **View:** The presentation layer (e.g., UI, JSON response).
+3. **Controller:** The intermediary that handles user input and coordinates between Model and View.
 
 ### **Recommended Folder Structure**
 ```text
 src/
-├── models/       # Database schemas
-├── views/        # UI/Templates (optional for APIs)
-├── controllers/  # Route handlers
+├── models/       # Data schemas (Mongoose/Sequelize)
+├── controllers/  # Route handlers & Business logic
 ├── routes/       # Endpoint definitions
-├── services/     # Core business logic
+├── services/     # Reusable business logic/External API calls
 └── app.js        # Entry point
 ```
 

@@ -4,6 +4,12 @@ title: System Design
 nav_order: 9
 ---
 
+---
+layout: default
+title: System Design
+nav_order: 9
+---
+
 # 🏗️ System Design Interview Questions
 
 Principles of distributed systems, scalability, and high-level architectural patterns.
