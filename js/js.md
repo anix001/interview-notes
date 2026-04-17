@@ -1,44 +1,69 @@
-## **JavaScript Related Questions:**
+---
+layout: default
+title: JavaScript
+nav_order: 2
+---
 
-## **1️⃣ What is the difference between `var`, `let`, and `const`?**
+# 📜 JavaScript Interview Questions
 
-# **`var` (Old Way – Avoid in Modern Code)**
+Comprehensive notes on JavaScript fundamentals, advanced concepts, and modern ES6+ features.
 
-### **✅ Scope: Function scoped**
+---
 
-### **✅ Can be re-declared**
+## 📑 Table of Contents
+- [1️⃣ var, let, and const](#1️⃣-var-let-and-const)
+- [2️⃣ Closures](#2️⃣-closures)
+- [3️⃣ == vs ===](#3️⃣--vs-)
+- [4️⃣ What is `this`?](#4️⃣-what-is-this)
+- [5️⃣ Debouncing vs Throttling](#5️⃣-debouncing-vs-throttling)
+- [6️⃣ Call, Apply, and Bind](#6️⃣-call-apply-and-bind)
+- [7️⃣ Shallow Clone vs Deep Clone](#7️⃣-shallow-clone-vs-deep-clone)
+- [8️⃣ Hoisting](#8️⃣-hoisting)
+- [9️⃣ Prototypal Inheritance](#9️⃣-prototypal-inheritance)
+- [🔟 Blocking vs Non-Blocking](#🔟-blocking-vs-non-blocking)
+- [1️⃣1️⃣ Currying](#1️⃣1️⃣-currying)
+- [1️⃣2️⃣ Higher-Order Functions (HOF)](#1️⃣2️⃣-higher-order-functions-hof)
+- [1️⃣3️⃣ Promises](#1️⃣3️⃣-promises)
+- [1️⃣4️⃣ Memoization](#1️⃣4️⃣-memoization)
+- [1️⃣5️⃣ Tree Shaking](#1️⃣5️⃣-tree-shaking)
+- [1️⃣6️⃣ Connection Pooling](#1️⃣6️⃣-connection-pooling)
+- [1️⃣7️⃣ Bundlers vs Transpilers](#1️⃣7️⃣-bundlers-vs-transpilers)
+- [1️⃣8️⃣ JWKS (JSON Web Key Set)](#1️⃣8️⃣-jwks-json-web-key-set)
+- [1️⃣9️⃣ Event Delegation](#1️⃣9️⃣-event-delegation)
+- [2️⃣0️⃣ null vs undefined](#2️⃣0️⃣-null-vs-undefined)
 
-### **✅ Can be reassigned**
+---
 
-# **🔹 2️⃣ `let` (Modern Standard)**
+## **1️⃣ var, let, and const**
 
-### **✅ Block scoped**
+### **`var` (Old Way – Avoid in Modern Code)**
+* **Scope:** Function scoped
+* **Can be re-declared:** Yes
+* **Can be reassigned:** Yes
 
-### **✅ Can be reassigned**
+### **`let` (Modern Standard)**
+* **Scope:** Block scoped
+* **Can be reassigned:** Yes
+* **Can be re-declared:** No (in same scope)
+* **Hoisting:** Hoisted but in Temporal Dead Zone (TDZ)
 
-### **❌ Cannot be re-declared in same scope**
+### **`const` (Constant Variable)**
+* **Scope:** Block scoped
+* **Can be reassigned:** No
+* **Can be re-declared:** No
+* **Initialization:** Must be initialized at declaration
 
-### **⚠ Hoisted but in Temporal Dead Zone (TDZ)**
+> [!NOTE]
+> **Temporal Dead Zone (TDZ):** The time between entering a block scope and the execution of the variable’s declaration where the variable exists but cannot be accessed.
 
-#  **3️⃣ `const` (Constant Variable)**
+---
 
-### **✅ Block scoped**
-
-### **❌ Cannot be reassigned**
-
-### **❌ Cannot be re-declared**
-
-### **⚠ Must be initialized at declaration**
-
-Temporal Dead Zone is the time between entering a block scope and the execution of the variable’s declaration where the variable exists but cannot be accessed.
-
-## **2️⃣ What is Closure?**
+## **2️⃣ Closures**
 
 A closure is when a function remembers variables from its outer scope even after the outer function has finished executing.
 
-### Example
-
-```bash
+### **Example**
+```javascript
 function outer() {
   let count = 0;
 
@@ -53,47 +78,36 @@ fn(); // 1
 fn(); // 2
 ```
 
-Why does this work?
-
-Because inner() forms a closure over count.
-
-## **3️⃣ What is the difference between `==` and `===`?**
-
+**Why does this work?** Because `inner()` forms a closure over `count`.
 
 ---
 
-# `==` vs `===`
+## **3️⃣ == vs ===**
 
-```bash
+* **`==`** → Performs **type coercion** before comparison.
+* **`===`** → Performs **strict comparison** (checks both value and type).
+
+```javascript
 5 == "5"   // true
 5 === "5"  // false
-
-`==` → type coercion  
- `===` → strict comparison
-
-Always prefer `===`.
 ```
 
-# **✅ What is `this` in JavaScript?**
-
-In JavaScript, the this keyword refers to the context in which a function is executed. It points to the object that is currently calling the function.
-
-1\. Global Context: When used in the global scope (outside of any function or object), this refers to the global object (window in browsers, or global in Node.js). 
-
- console.log(this); // In a browser, this logs the window object
-
-2\. Object Method: When this is used inside a method of an object, it refers to the object itself.
-
-const person \= { name: 'Alice', greet: function() { console.log(this.name); // 'this' refers to the person object } }; person.greet(); // Logs: Alice 
-
-3\. Constructor Functions: When used in a constructor function (a function that creates new objects), this refers to the newly created object. 
-
+> [!TIP]
+> **Interview Gold:** Always prefer `===` to avoid unexpected bugs caused by type coercion.
 
 ---
 
-# `this` Example
+## **4️⃣ What is `this`?**
 
-```bash
+In JavaScript, the `this` keyword refers to the context in which a function is executed. It points to the object that is currently calling the function.
+
+1. **Global Context:** In global scope, `this` refers to the global object (`window` in browsers, `global` in Node.js).
+2. **Object Method:** Inside a method, `this` refers to the object itself.
+3. **Constructor Functions:** Refers to the newly created object.
+4. **Arrow Functions:** Do NOT have their own `this`. They inherit it from the surrounding lexical context.
+
+### **Example**
+```javascript
 const person = {
   name: "Alice",
   greet: function () {
@@ -104,53 +118,21 @@ const person = {
 person.greet(); // Alice
 ```
 
-4\. Arrow Functions: Arrow functions do not have their own this. They inherit this from their surrounding lexical context. 
+---
 
-const person \= { name: 'Alice', greet: function() { setTimeout(() \=\> { console.log(this.name); // 'this' refers to the person object }, 1000); } }; person.greet(); // Logs: Alice after 1 second
-
-# **✅ Debouncing vs Throttling (Simple Explanation)**
+## **5️⃣ Debouncing vs Throttling**
 
 Both are used to **control how often a function runs** when an event happens many times.
 
-Examples of frequent events:
+### **1. Debouncing**
+👉 **Waits until the user stops doing something.** The function runs only after the event stops for a specific time.
+* **Example:** Search bar typing. User types `A → An → Ani`... Debounce makes only **1 API call** after the user stops.
 
-* typing in search box
-
-* scrolling
-
-* resizing window
-
-* mouse movement
-
-# **✅ 1\. Debouncing**
-
-👉 **Debouncing waits until the user stops doing something.**
-
-The function runs **only after the event stops for a specific time**.
-
-### **Example**
-
-Search bar typing.
-
-User types:
-
-A → An → Ani → Anis → Anish
-
-Without debounce → **5 API calls** ❌  
- With debounce → **1 API call after user stops typing** ✅
-
-
----
-
-# Debounce Example
-
-```bash
+```javascript
 function debounce(fn, delay) {
   let timer;
-
   return function (...args) {
     clearTimeout(timer);
-
     timer = setTimeout(() => {
       fn(...args);
     }, delay);
@@ -158,33 +140,15 @@ function debounce(fn, delay) {
 }
 ```
 
-# **✅ 2\. Throttling**
+### **2. Throttling**
+👉 **Ensures a function runs only once in a fixed time interval.**
+* **Example:** Scrolling. If a user scrolls 100 times in 1s, throttling ensures the function runs only once every 300ms.
 
-👉 **Throttling ensures a function runs only once in a fixed time interval.**
-
-No matter how many times event triggers.
-
----
-
-### **Example**
-
-Scrolling page.
-
-User scrolls **100 times in 1 second**.
-
-Throttle → function runs maybe **once every 300ms**.
-
----
-
-# Throttle Example
-
-```bash
+```javascript
 function throttle(fn, delay) {
   let lastCall = 0;
-
   return function (...args) {
     const now = Date.now();
-
     if (now - lastCall >= delay) {
       lastCall = now;
       fn(...args);
@@ -193,852 +157,159 @@ function throttle(fn, delay) {
 }
 ```
 
-## **Call vs apply vs bind**
+---
 
-In JavaScript, **`call`**, **`apply`**, and **`bind`** are used to control what **`this`** refers to when a function runs.
+## **6️⃣ Call, Apply, and Bind**
+
+Used to control what `this` refers to.
+
+### **1. call()**
+Executes immediately. Arguments are passed **separated by commas**.
+```javascript
+greet.call(person1, 25, "Delhi");
+```
+
+### **2. apply()**
+Executes immediately. Arguments are passed as an **array**.
+```javascript
+greet.apply(person2, [30, "Mumbai"]);
+```
+
+### **3. bind()**
+Does **NOT** run immediately. Returns a **new function** with `this` fixed.
+```javascript
+const greetRahul = greet.bind(person2, 28, "Pune");
+greetRahul();
+```
 
 ---
 
-# Call / Apply / Bind Example
+## **7️⃣ Shallow Clone vs Deep Clone**
 
-```bash
-const person1 = { name: "Anish" };
-const person2 = { name: "Rahul" };
+### **1. Shallow Clone**
+Copies only the **first level**. Nested objects share the **same reference**.
+* **Method:** `{ ...obj }` or `Object.assign({}, obj)`.
 
-function greet(age, city) {
-  console.log(this.name + " is " + age + " years old from " + city);
-}
-```
+### **2. Deep Clone**
+Copies **all levels**. Nested objects are fully independent.
+* **Modern Way:** `structuredClone(obj)`
+* **Old Way:** `JSON.parse(JSON.stringify(obj))`
 
-`greet` uses **this.name**, so we need to decide which object (`person1` or `person2`) should be `this`.
-
-# **1\. call()**
-
-**call() executes the function immediately** and passes arguments **separated by commas**.
-
-```bash
-greet.call(person1, 25, "Delhi")
-
-// Output: Anish is 25 years old from Delhi
-```
-
-Here:
-
-* `person1` becomes `this`
-
-* arguments passed normally
-
-# **2\. apply()**
-
-**apply() is almost same as call**, but **arguments are passed as an array**.
-
-```bash
-greet.apply(person2, [30, "Mumbai"])
-
-// Output: Rahul is 30 years old from Mumbai
-```
-
-Difference from `call`:
-
-* arguments inside **array**
-
-# **3\. bind()**
-
-**bind() does NOT run the function immediately.**  
- It **returns a new function** with `this` fixed.
-
-```bash
-const greetRahul = greet.bind(person2, 28, "Pune")
-
-greetRahul()
-
-// Output: Rahul is 28 years old from Pune
-```
-
-Here:
-
-* `bind` creates a **new function**
-
-* it runs **only when we call it**
-
-## **Shallow Clone vs Deep Clone (JavaScript)**
-
-### **1️⃣ Shallow Clone**
-
-A **shallow clone** copies only the **first level of an object**.  
- If the object contains **nested objects**, the **reference is copied**, not the actual value.
-
-So **both objects share the same nested object in memory**.
-
+> [!IMPORTANT]
+> **Shallow Clone:** Changing a nested object in the clone *will* change the original.
+> **Deep Clone:** Changing any part of the clone will *not* affect the original.
 
 ---
 
-# Shallow Copy Example
+## **8️⃣ Hoisting**
 
-```bash
-const user = {
-  name: "Anish",
-  address: {
-    city: "Janakpur"
-  }
-};
+JavaScript moves declarations to the top of their scope before execution.
 
-const shallowCopy = { ...user };
+1. **Function Declarations:** Fully hoisted. Can be called before definition.
+2. **`var`:** Hoisted but initialized as `undefined`.
+3. **`let` and `const`:** Hoisted but stay in **Temporal Dead Zone (TDZ)**. Accessing them early causes a `ReferenceError`.
+4. **Function Expressions:** NOT hoisted as functions (hoisted as variables if using `var`).
 
-shallowCopy.address.city = "Kathmandu";
-
-console.log(user.address.city); // Kathmandu
-```
-
-💡 Even though we changed `shallowCopy`, the **original object also changed** because the **nested object reference is shared**.
-
-# **2️⃣ Deep Clone**
-
-A **deep clone** copies **all levels of the object**, including **nested objects**.
-
-The new object has **completely separate memory references**.
-
+> [!TIP]
+> **Interview Gold:** Hoisting is the process of moving declarations to the top during the compilation phase.
 
 ---
 
-# Deep Clone Example
+## **9️⃣ Prototypal Inheritance**
 
-```bash
-const user = {
-  name: "Anish",
-  address: {
-    city: "Janakpur"
-  }
-};
+Objects share properties and methods through a **prototype chain**. Every object has a prototype from which it inherits.
 
-const deepCopy = structuredClone(user);
-
-deepCopy.address.city = "Kathmandu";
-
-console.log(user.address.city); // Janakpur
-```
-
-💡 Here the original object **does NOT change** because everything was copied fully.
-
-# **Common Ways to Deep Clone**
-
-### **1️⃣ Modern Way (Best)**
-
-```bash
-structuredClone(obj)
-```
-
-### **2️⃣ Old Way**
-
-```bash
-JSON.parse(JSON.stringify(obj))
-```
-
-# **Simple Interview Answer**
-
-**Shallow Clone:**  
- Copies only the first level; nested objects share the same reference.
-
-**Deep Clone:**  
- Copies all levels of the object; nested objects are fully independent.
-
-## **Interview One-Line Answer**
-
-**Spread operator performs a shallow copy, meaning it copies only the first level of an object while nested objects remain shared by reference.**
-
-## **Hoisting in JavaScript (Simple Explanation)**
-
-**Hoisting** means JavaScript **moves declarations to the top of their scope before execution**.
-
-So you can sometimes **use variables or functions before they are declared in code**.
-
-# **1️⃣ Function Hoisting**
-
-Function declarations are **fully hoisted**, so you can call them before defining them.
-
-### **Example**
-
-```bash
-sayHello()
-
-function sayHello() {  
- console.log("Hello")  
-}
-
-// Output: Hello
-```
-
-### **What JavaScript internally does**
-
-```bash
-function sayHello() {  
- console.log("Hello")  
-}
-
-sayHello()
-```
-
-So the function is **moved to the top**.
-
----
-
-# **2️⃣ var Hoisting**
-
-Variables declared with **`var` are hoisted but initialized as `undefined`**.
-
-### **Example**
-
-```bash
-console.log(a)
-
-var a = 10
-
-// Output: undefined
-```
-
-### **Internally JavaScript sees this**
-
-```bash
-var a  
-console.log(a)
-
-a = 10
-```
----
-
-# **3️⃣ let and const Hoisting**
-
-`let` and `const` are **also hoisted**, but they stay in a **Temporal Dead Zone (TDZ)** until initialization.
-
-So accessing them **before declaration causes an error**.
-
-### **Example**
-
-```bash
-console.log(a)
-
-let a = 10
-
-// Output: ReferenceError: Cannot access 'a' before initialization
-```
----
-
-# **4️⃣ Function Expression (Important Interview Point)**
-
-Function expressions **are NOT hoisted like function declarations**.
-
-### **Example**
-
-```bash
-sayHello()
-
-var sayHello = function () {  
- console.log("Hello")  
-}
-
-// Output: TypeError: sayHello is not a function
-```
-
-Because JavaScript sees this internally:
-
-```bash
-var sayHello
-
-sayHello()   // undefined()
-
-sayHello = function() {  
- console.log("Hello")  
-}
-```
-
-# **One-Line Interview Answer**
-
-**Hoisting is JavaScript's behavior of moving variable and function declarations to the top of their scope during the compilation phase.**
-
-## 
-
-## **Prototypal Inheritance**
-
-Prototypal inheritance is a way for objects in JavaScript to share properties and methods. Instead of classes and instances, JavaScript uses prototypes.
-
-Basic Concepts
-
-Object Prototype:
-
-Every JavaScript object has a prototype. A prototype is also an object. An object inherits properties and methods from its prototype.
-
-Prototype Chain:
-
-If an object doesn't have a property or method, JavaScript looks for it in the object's prototype. This continues up the chain until it finds the property/method or reaches the end of the chain (usually Object.prototype).
-
-Example
-
-Let's use an example to explain how prototypal inheritance works:
-
-Step 1: Create a Prototype Object
-
-```bash
+```javascript
 const animal = {
   eats: true,
-  walk() {
-    console.log('Animal walks');
-  }
+  walk() { console.log('Animal walks'); }
 };
-```
 
-`animal` is an object with a property `eats` and a method `walk`.
-
-Step 2: Create Another Object Inheriting from the Prototype
-
-```bash
 const dog = Object.create(animal);
-dog.barks = true;
+console.log(dog.eats); // true (inherited)
 ```
-
-`dog` is an object created with `animal` as its prototype. `dog` now has access to `animal`'s properties and methods. `dog` also has its own property `barks`.
-
-Step 3: Access Inherited Properties and Methods
-
-```bash
-console.log(dog.eats); // true (inherited from animal)
-dog.walk(); // "Animal walks" (method inherited from animal)
-console.log(dog.barks); // true (own property)
-```
-
-`dog` can access `eats` and `walk` from `animal`. `dog` also has its own property `barks`.
-
-## **Blocking and Non-Blocking in Node**
-
-#### **What is Blocking?**
-
-It refers to the blocking of further operation until the current operation finishes. Blocking methods are executed synchronously. Synchronously means that the program is executed line by line. The program waits until the called function or the operation returns.
-
-Example: Following example uses the readFileSync() function to read files and demonstrate Blocking in Node.js
 
 ---
 
-# Node Blocking Example
+## **🔟 Blocking vs Non-Blocking**
 
-```bash
-const fs = require("fs");
-
-const filepath = "text.txt";
-
-const data = fs.readFileSync(filepath, { encoding: "utf8" });
-
-console.log(data);
-
-// This section calculates the sum of numbers from 1 to 10
-
-let sum = 0;
-
-for(let i=1; i<=10; i++){
-
-	sum = sum + i;
-
-}
-
-// Prints the sum
-
-console.log('Sum: ', sum);
-```
-
-#### **What is Non-Blocking ?**
-
-It refers to the program that does not block the execution of further operations. Non-Blocking methods are executed asynchronously. Asynchronously means that the program may not necessarily execute line by line. The program calls the function and move to the next operation and does not wait for it to return.
-
-Example: Following example uses the `readFile()` function to read files and demonstrate Non-Blocking in Node
-
-```bash
-const fs = require('fs');
-
-const filepath = 'text.txt';
-
-// Reads a file in a asynchronous and non-blocking way
-
-fs.readFile(filepath, {encoding: 'utf8'}, (err, data) => {
-
-	// Prints the content of file
-
-	console.log(data);
-
-});
-
-// This section calculates the sum of numbers from 1 to 10
-
-let sum = 0;
-
-for(let i=1; i<=10; i++){
-
-	sum = sum + i;
-
-}
-
-// Prints the sum
-
-console.log('Sum: ', sum);
-```
-
-### **Currying in JavaScript (Simple Explanation) 😊**
-
-**Currying** means converting a function that takes **multiple arguments** into a **series of functions that each take one argument**.
-
-Instead of passing all arguments at once, you pass them **one by one**.  
-**1️⃣ Normal Function (Without Currying)**
-
-```bash
-function add(a, b, c) {
- return a + b + c;
-}
-
-add(2, 3, 4); // 9
-```
-
-Here the function takes **3 arguments at the same time**.
+* **Blocking (Synchronous):** Execution stops until the operation finishes (e.g., `readFileSync`).
+* **Non-Blocking (Asynchronous):** Execution continues; a callback/promise handles the result (e.g., `readFile`).
 
 ---
 
-## **2️⃣ Curried Version**
+## **1️⃣1️⃣ Currying**
 
-```bash
-function add(a) {
- return function (b) {
-   return function (c) {
-     return a + b + c;
-   };
- };
-}
+Converting a function with multiple arguments into a series of functions that each take **one argument**.
 
+```javascript
+const add = (a) => (b) => (c) => a + b + c;
 add(2)(3)(4); // 9
 ```
 
-**1️⃣ Logging Utility (Very Practical)**
-
-Suppose you are building a logging system.
-
-### **Without Currying**
-
-```bash
-function log(level, message) {
- console.log(`[${level}] ${message}`);
-}
-
-log("ERROR", "Something failed");
-
-log("INFO", "User logged in");
-```
-
-### **With Currying**
-
-```bash
-const log = (level) => (message) => {
- console.log(`[${level}] ${message}`);
-};
-
-const errorLog = log("ERROR");
-
-const infoLog = log("INFO");
-
-errorLog("Database failed");
-
-infoLog("User logged in");
-```
-
-### **Higher-Order Function (HOF) in JavaScript 😊**
-
-A **Higher-Order Function** is a function that does **at least one of these two things**:
-
-1️⃣ **Takes another function as an argument**  
- 2️⃣ **Returns another function**
-
-```bash
-function greet(message) {
-  return function(name) {
-    console.log(message + " " + name);
-  }
-}
-
-const sayHello = greet("Hello");
-sayHello("Anish");
-```
-
-### **Promise**
-
-A promise is an object which is used to represent the eventual completion (or failure) of an asynchronous function and its resulting value.
-
-A Promise is in one of these states:
-
-**pending**: initial state, neither fulfilled nor rejected.
-
-**fulfilled**: meaning that the operation was completed successfully.
-
-**rejected**: meaning that the operation failed.
-
-How to create a promise in JS: To create a promise, you need to create an instance object using the `Promise` constructor function.
-
-```bash
-const promise = new Promise((resolve, reject) => {
-  // Condition to resolve or reject the promise
-});
-```
-
-In promises, `resolve` is a function with an optional parameter representing the resolved value. Also, `reject` is a function with an optional parameter representing the reason why the promise failed.
-
+**Practical Use:** Creating specialized logging functions (e.g., `const errorLog = log("ERROR")`).
 
 ---
 
-# Promise Example
+## **1️⃣2️⃣ Higher-Order Functions (HOF)**
 
-```bash
-const promise = new Promise((resolve, reject) => {
-  const num = Math.random();
-
-  if (num >= 0.5) {
-    resolve("Promise is fulfilled!");
-  } else {
-    reject("Promise failed!");
-  }
-});
-
-promise.then(
-  (value) => console.log(value),
-  (reason) => console.error(reason)
-);
-
-promise.then(handleResolve, handleReject);
-```
-
-It is possible to create an immediately resolved promise, and then attach a callback with the `.then()` method. You can also create an immediately rejected promise in the same way too.
-
-```bash
-Promise.resolve("Successful").then((result) => console.log(result));
-// Output: Successful
-
-Promise.reject("Not successful").then((result) => console.log(result));
-// Error: Uncaught (in promise)
-```
-
-The error in the rejected promise is because you need to define a separate callback to handle a rejected promise.
-
-```bash
-Promise.reject("Not successful").then(
-  () => {
-    /*Empty Callback if Promise is fulfilled*/
-  },
-  (reason) => console.error(reason)
-);
-// Output: Not successful
-```
-
-How to Handle Errors in a Promise: To handle errors in Promises, use the `.catch()` method. If anything goes wrong with any of your promises, this method can catch the reason for that error.
-
-```bash
-Promise.reject(new Error("Failed")).catch((reason) => console.error(reason));
-// Output: Error: Failed
-```
-
-How to Handle Many Promises at Once: Here are the available methods that can help us achieve this:
-
-**1️⃣ Promise.all()**  
-`Promise.all()` accepts an array of promises and returns a single promise. It resolves when **all** promises in the input array are fulfilled. If any promise is rejected, `Promise.all()` immediately rejects.
-
-```bash
-const promise1 = Promise.resolve(`First Promise's Value`);
-const promise2 = new Promise((resolve) => setTimeout(resolve, 3000, `Second Promise's Value`));
-const promise3 = new Promise((resolve) => setTimeout(resolve, 2000, `Third Promise's Value`));
-
-Promise.all([promise1, promise2, promise3]).then((values) => {
-  values.forEach((value) => console.log(value));
-});
-```
-
-**2️⃣ Promise.race()**  
-`Promise.race()` returns a single promise that settles as soon as **any** of the promises in the array settles (either resolved or rejected).
-
-```bash
-const promise1 = Promise.resolve(`First Promise's Value`);
-const promise2 = new Promise((resolve) => setTimeout(resolve, 3000, `Second Promise's Value`));
-const promise3 = new Promise((resolve) => setTimeout(resolve, 2000, `Third Promise's Value`));
-
-Promise.race([promise1, promise2, promise3]).then((value) => {
-  console.log(value); // Resolves with the fastest promise
-});
-```
-
-**3️⃣ Promise.any()**  
-`Promise.any()` returns the **first resolved** promise. If all promises are rejected, it returns an `AggregateError`.
-
-```bash
-const promise1 = new Promise((resolve) => setTimeout(resolve, 3000, `First Promise's Value`));
-const promise2 = new Promise((resolve) => setTimeout(resolve, 2000, `Second Promise's Value`));
-const promise3 = Promise.reject(`Third Promise's Value`);
-
-Promise.any([promise1, promise2, promise3]).then(val => console.log(val));
-```
-
-If none of the promises resolve:
-
-```bash
-const promise1 = new Promise((resolve, reject) => setTimeout(reject, 3000, `First rejection reason`));
-const promise2 = new Promise((resolve, reject) => setTimeout(reject, 2000, `Second rejection reason`));
-const promise3 = Promise.reject(`Third rejection reason`);
-
-Promise.any([promise1, promise2, promise3]).catch(({ errors }) => console.log(errors));
-```
-
-**4️⃣ Promise.allSettled()**  
-`Promise.allSettled()` waits for **all** promises to settle (either fulfilled or rejected) and returns an array of objects describing the outcome of each promise.
-
-```bash
-const promise1 = new Promise((resolve) => setTimeout(resolve, 3000, `First Promise's Value`));
-const promise2 = new Promise((resolve) => setTimeout(resolve, 2000, `Second Promise's Value`));
-const promise3 = Promise.reject(`Third Promise's Value`);
-
-Promise.allSettled([promise1, promise2, promise3]).then(console.log);
-
-/* Output:
-[
-  { status: 'fulfilled', value: "First Promise's Value" },
-  { status: 'fulfilled', value: "Second Promise's Value" },
-  { status: 'rejected', reason: "Third Promise's Value" }
-]
-*/
-```
-
-### **Memoization in JavaScript (Simple Explanation) 😊**
-
-**Memoization is an optimization technique where we store the result of a function call so that if the same input comes again, we return the stored result instead of recalculating.**
-
-**👉 In simple words:**
-
-**Remember the result of expensive functions and reuse it when the same input occurs.**
+A function that:
+1. Takes another function as an argument.
+2. OR returns another function.
 
 ---
 
-# **1️⃣ Without Memoization**
+## **1️⃣3️⃣ Promises**
 
-```bash
-function square(n) {
- console.log("Calculating...");
- return n * n;
-}
+Represents the eventual completion or failure of an async operation.
+* **States:** `pending`, `fulfilled`, `rejected`.
 
-square(5); // Calculating... → 25
-square(5); // Calculating... → 25 (runs again)
-```
-
-**Problem:**  
- Even though input is the same, the function recalculates.
+### **Handling Multiple Promises:**
+1. **`Promise.all()`:** Resolves when **all** resolve. Rejects if **any** reject.
+2. **`Promise.race()`:** Settles as soon as the **first** one settles.
+3. **`Promise.any()`:** Resolves with the **first fulfilled** promise.
+4. **`Promise.allSettled()`:** Waits for **all** to settle (regardless of success/failure).
 
 ---
 
-# **2️⃣ With Memoization**
+## **1️⃣4️⃣ Memoization**
 
-```bash
-function memoizedSquare() {
- const cache = {};
- return function (n) {
-   if (cache[n]) {
-     console.log("From cache");
-     return cache[n];
-   }
-   console.log("Calculating...");
-   const result = n * n;
-   cache[n] = result;
-   return result;
- };
-}
-
-const square = memoizedSquare();
-square(5); // Calculating... → 25
-square(5); // From cache → 25
-```
-
-Now the result is stored in cache.
-
-### **Tree Shaking (Simple Explanation) 🌳**
-
-**Tree Shaking** is a **JavaScript optimization technique** used by bundlers (like Webpack, Rollup, and Vite) to **remove unused code from the final bundle**.
-
-👉 Simple definition:
-
-**Tree shaking removes unused imports from your code so the final bundle size becomes smaller.**
+An optimization technique that stores function results to avoid expensive recalculations for the same inputs.
 
 ---
 
-# **1️⃣ Example Without Tree Shaking**
+## **1️⃣5️⃣ Tree Shaking**
 
-Suppose you have a file:
-
-### **`math.js`**
-
-```bash
-export function add(a, b) {
- return a + b;
-}
-
-export function multiply(a, b) {
- return a * b;
-}
-
-export function divide(a, b) {
- return a / b;
-}
-```
-
-Now in another file:
-
-```bash
-import { add } from "./math";
-
-console.log(add(2, 3));
-```
-
-You only use **`add()`**.
-
-But without tree shaking, the bundle may include:
-- `add`
-- `multiply`
-- `divide`
-
-Even though **multiply and divide are never used**.
+Removing unused code from the final bundle during the build process to reduce size.
 
 ---
 
-# **2️⃣ With Tree Shaking**
+## **1️⃣6️⃣ Connection Pooling**
 
-The bundler analyzes the imports and removes unused code.
-
-Final bundle contains only:
-
-```bash
-function add(a, b) {
- return a + b;
-}
-```
-
-✅ Smaller bundle  
- ✅ Faster loading
-
-### **Connection Pooling (Simple Explanation)** 
-
-**Connection Pooling** is a technique used in **databases** to **reuse existing connections** instead of creating a new one every time a query runs. This improves **performance and resource management**.
-
-## **Benefits of Connection Pooling**
-
-* Faster query execution
-
-* Limits database overload
-
-* Efficient resource usage
-
-* Reduces connection creation overhead
-
-### **Bundlers vs Transpilers (Simple Explanation)** 
-
-Both are **build tools in JavaScript**, but they do **different jobs**.
+Reusing existing database connections instead of creating new ones for every query to improve performance.
 
 ---
 
-# **1️⃣ Transpiler**
+## **1️⃣7️⃣ Bundlers vs Transpilers**
 
-A **Transpiler** converts **modern JavaScript code into older JavaScript** so that older browsers can understand it.
-
-Example tool: Babel
-
-### **Example**
-
-Modern JS:
-
-```bash
-const greet = (name) => `Hello ${name}`;
-```
-
-After transpiling (older JS):
-
-```bash
-var greet = function(name) {
- return "Hello " + name;
-};
-```
-
-✅ Same logic  
- ✅ Different syntax for compatibility
-
-**Purpose:**  
- 👉 Make modern JavaScript work in **older browsers**
+* **Transpiler:** Converts modern syntax to older syntax for compatibility (e.g., Babel).
+* **Bundler:** Combines multiple files into one optimized file (e.g., Webpack, Vite).
 
 ---
 
-# **2️⃣ Bundler**
+## **1️⃣8️⃣ JWKS (JSON Web Key Set)**
 
-A **Bundler** combines **multiple files/modules into one or few optimized files** for the browser.
-
-Examples:
-
-* Webpack
-
-* Vite
-
-* Rollup
-
-### **Example**
-
-Project structure:
-- `index.js`
-- `utils.js`
-- `api.js`
-
-Browser cannot easily load many modules efficiently, so bundler creates:
-
-```bash
-// bundle.js
-// (Containing all code combined and optimized)
-```
-
-### **JWKS (JSON Web Key Set) – Simple Explanation** 
-
-**JWKS** stands for **JSON Web Key Set**.
-
-It is a **JSON file that contains public keys used to verify JWT tokens**.
-
-It is commonly used in authentication systems like **Auth0**, **Firebase Authentication**, or **Keycloak**.
+A JSON file containing public keys used to verify JWT tokens in authentication systems.
 
 ---
 
-# **1️⃣ The Problem JWKS Solves**
+## **1️⃣9️⃣ Event Delegation**
 
-When using **JWT (JSON Web Tokens)**:
+Adding one event listener to a parent instead of many to children, utilizing **event bubbling**.
 
-1. Server **creates a JWT** using a **private key**
+---
 
-2. Client sends that JWT to another service
+## **2️⃣0️⃣ null vs undefined**
 
-3. That service must **verify the JWT**
-
-But the service **cannot access the private key**.
-
-So it needs the **public key**.
-
-👉 JWKS provides those **public keys**.
-
-## **Event Delegation**
-- **What is Event Delegation?**
-   - Simple Explanation: Instead of adding event listeners to every single child, you add one listener to the parent. It uses "event bubbling" to catch events from children.
-   - Example:
-   ```bash
-   document.querySelector('#parent').addEventListener('click', (e) => {
-     if (e.target.tagName === 'LI') {
-       console.log('List item clicked!');
-     }
-   });
-   ```
-
-## **null vs undefined**
-- **Difference between `null` and `undefined`?**
-   - `undefined`: A variable has been declared but not yet assigned a value.
-   - `null`: An intentional assignment of "no value".
-   ```bash
-   let a; // undefined
-   let b = null; // null
-   ```
+* **`undefined`:** Declared but not assigned.
+* **`null`:** Intentional assignment of "no value".

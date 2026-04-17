@@ -1,4 +1,20 @@
+---
+layout: default
+title: Design Patterns
+nav_order: 10
+---
+
 # 🎨 Design Pattern Interview Questions
+
+Structural and behavioral design patterns for clean, maintainable, and testable code.
+
+---
+
+## 📑 Table of Contents
+- [1️⃣ Dependency Injection (DI)](#1️⃣-dependency-injection-di)
+- [2️⃣ MVC (Model-View-Controller)](#2️⃣-mvc-model-view-controller)
+
+---
 
 ## **1️⃣ What is Dependency Injection (DI) and why is it important?**
 
@@ -14,7 +30,7 @@
 
 ### **Example (Node.js)**
 
-**Without DI (Tightly Coupled)**:
+#### **Without DI (Tightly Coupled)**:
 ```javascript
 // Service directly imports the model, making it hard to test/replace
 import { User } from '../models/user.model.js';
@@ -26,7 +42,7 @@ export class UserService {
 }
 ```
 
-**With DI (Decoupled)**:
+#### **With DI (Decoupled)**:
 ```javascript
 // Step 1: Inject the repository via constructor
 export class UserService {
@@ -43,6 +59,8 @@ export class UserService {
 const userService = new UserService(userRepository);
 ```
 
+---
+
 ## **2️⃣ What is the MVC (Model-View-Controller) pattern?**
 
 **Answer:**
@@ -53,7 +71,7 @@ The **MVC** pattern is a structural design pattern that separates an application
 2. **View**: Handles the output or presentation layer (e.g., JSON responses, HTML templates).
 3. **Controller**: Contains the business logic, handles user input, and coordinates between the Model and View.
 
-### **Folder Structure Pattern**
+### **Recommended Folder Structure**
 ```text
 src/
 ├── models/       # Database schemas
@@ -63,3 +81,6 @@ src/
 ├── services/     # Core business logic
 └── app.js        # Entry point
 ```
+
+> [!TIP]
+> **Interview Gold:** Mentioning the separation of **Services** from **Controllers** shows a higher level of understanding, where Controllers handle the request/response and Services handle the core business logic.

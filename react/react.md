@@ -1,316 +1,162 @@
-## **REACT JS QUESTIONS:**
+---
+layout: default
+title: React
+nav_order: 4
+---
 
-## **✅ Q1: What is React?**
+# ⚛️ React Interview Questions
 
-**Answer:**
+From core fundamentals to advanced patterns and the latest features in React 19.
 
+---
+
+## 📑 Table of Contents
+- [1️⃣ Core Fundamentals](#1️⃣-core-fundamentals)
+- [2️⃣ Hooks API](#2️⃣-hooks-api)
+- [3️⃣ Rendering & Performance](#3️⃣-rendering--performance)
+- [4️⃣ Controlled vs Uncontrolled Components](#4️⃣-controlled-vs-uncontrolled-components)
+- [5️⃣ Important Concepts](#5️⃣-important-concepts)
+- [6️⃣ Next.js Specific Questions](#6️⃣-nextjs-specific-questions)
+- [7️⃣ React Lifecycle](#7️⃣-react-lifecycle)
+- [8️⃣ Lazy Loading & Optimization](#8️⃣-lazy-loading--optimization)
+- [9️⃣ Hydration](#9️⃣-hydration)
+- [🔟 React 19 Features](#🔟-react-19-features)
+- [1️⃣1️⃣ Shadow DOM vs Virtual DOM](#1️⃣1️⃣-shadow-dom-vs-virtual-dom)
+- [1️⃣2️⃣ React Strict Mode](#1️⃣2️⃣-react-strict-mode)
+
+---
+
+## **1️⃣ Core Fundamentals**
+
+### **What is React?**
 React is a JavaScript library for building user interfaces using reusable components and a virtual DOM for efficient updates.
 
-## **✅ Q2: What is Virtual DOM?**
+### **What is Virtual DOM?**
+A lightweight copy of the real DOM. React compares the virtual DOM with a previous version (diffing) and updates only the changed parts in the real DOM (reconciliation).
+* **Benefit:** Faster performance by minimizing expensive real DOM manipulations.
 
-**Answer:**
+### **What is a Component?**
+A reusable, independent piece of UI.
 
-Virtual DOM is a lightweight copy of the real DOM. React compares virtual DOM with previous version and updates only changed parts in real DOM.
+---
 
-**Benefit:** Faster performance.
+## **2️⃣ Hooks API**
 
-## **✅ Q3: What is a component?**
-
-**Answer:**
-
-A component is a reusable piece of UI.
-
-## **✅ Q4: What is useState?**
-
+### **`useState`**
 Used to manage state in functional components.
 
-## **✅ Q5: What is useEffect?**
+### **`useEffect`**
+Used for side effects like API calls, event listeners, and timers.
 
-Used for side effects like:
-
-* API calls
-
-* Event listeners
-
-* Timers
-
-## **✅ Q7: What is the difference between state and props?**
-
-| State | Props |
-| ----- | ----- |
-| Managed inside component | Passed from parent |
-| Can change | Read-only |
-| Mutable | Immutable |
-
-## **✅ Q8: What is React.memo?**
-
-Prevents unnecessary re-renders.
-
-```bash
-export default React.memo(User);
-```
-
-Used when props don’t change.
-
-## **✅ Q9: What is useMemo?**
-
-Memoizes calculated value.
-
-```bash
+### **`useMemo`**
+Memoizes a **calculated value** to prevent expensive re-computations on every render.
+```javascript
 const result = useMemo(() => expensiveCalc(data), [data]);
 ```
 
-Prevents recalculation.
-
-## **✅ Q10: What is useCallback?**
-
-Memoizes function.
-
-```bash
+### **`useCallback`**
+Memoizes a **function definition** to prevent it from being recreated on every render.
+```javascript
 const handleClick = useCallback(() => {
   console.log("clicked");
 }, []);
 ```
 
-Prevents function recreation.
-
-# **🔥 5\. Rendering Questions (Very common)**
-
-## **✅ Q11: When does React component re-render?**
-
-Re-renders when:
-
-* State changes
-
-* Props changes
-
-* Parent re-renders
-
-## **✅ Q12: Difference between controlled and uncontrolled components**
-
-Controlled:
-
-```bash
-<input value={name} onChange={e => setName(e.target.value)} />
-```
-
-React controls input.
-
-Uncontrolled:
-
-```bash
-<input ref={inputRef} />
-```
-
-DOM controls input.
+### **`useRef`**
+Holds a mutable value that doesn't trigger a re-render or accesses a DOM element directly.
 
 ---
 
-## **✅ Q14: How do you prevent unnecessary re-renders?**
+## **3️⃣ Rendering & Performance**
 
-Answer:
+### **When does a component re-render?**
+1. State changes.
+2. Props change.
+3. Parent component re-renders.
 
-* React.memo
+### **`React.memo`**
+A higher-order component that prevents unnecessary re-renders of a functional component if its props haven't changed.
 
-* useMemo
+### **Optimization Strategy**
+> [!TIP]
+> **Interview Gold:** To optimize a slow React app, first use the **React DevTools Profiler** to find bottlenecks. Then use `React.memo`, `useMemo`, and `useCallback` strategically. Implement lazy loading, virtualize large lists (e.g., `react-window`), and ensure stable keys in lists.
 
-* useCallback
+---
 
-* Proper state management
+## **4️⃣ Controlled vs Uncontrolled Components**
 
-# **🧠 7\. Important Concept Questions**
+* **Controlled:** React handles the state of the input.
+  ```javascript
+  <input value={name} onChange={e => setName(e.target.value)} />
+  ```
+* **Uncontrolled:** The DOM handles the input state; accessed via `refs`.
+  ```javascript
+  <input ref={inputRef} />
+  ```
 
-## **✅ Q15: What is lifting state up?**
+---
 
-Moving state to parent component to share between children.
+## **5️⃣ Important Concepts**
 
-## **✅ Q16: What is key in React?**
+### **Lifting State Up**
+Moving shared state to the closest common ancestor to allow multiple components to access it.
 
-Key helps React identify which items changed.
+### **Keys in React**
+Keys help React identify which items have changed, been added, or removed. Avoid using indexes as keys if the list order can change.
 
-```bash
-{users.map(user => (
-  <div key={user.id}>{user.name}</div>
-))}
-```
+### **Reconciliation**
+The "diffing" algorithm React uses to update only the changed parts of the real DOM.
 
-## **✅ Q17: Difference between useRef and useState**
+### **Prop Drilling**
+The problem of passing data through many levels of components.
+* **Solutions:** Context API, Zustand, Redux.
 
-useState:
+---
 
-* Causes re-render
+## **6️⃣ Next.js Specific Questions**
 
-useRef:
+### **CSR vs SSR**
+* **CSR (Client Side Rendering):** Browser downloads JS and renders the UI.
+* **SSR (Server Side Rendering):** Server generates HTML on each request.
+* **Next.js:** Supports CSR, SSR, SSG (Static Site Generation), and ISR (Incremental Static Regeneration).
 
-* Does NOT cause re-render
+---
 
-Example:
+## **7️⃣ React Lifecycle**
 
-```bash
-const ref = useRef(0);
-```
-
-## **✅ Q18: What is reconciliation?**
-
-Process where React compares virtual DOM and updates real DOM efficiently.
-
-## **✅ Q19: What is prop drilling?**
-
-Passing props through many levels.
-
-Solution:
-
-* Context API
-
-* Zustand
-
-* Redux
-
-# **🚀 9\. Next.js Specific React Questions (Important for YOU)**
-
-## **✅ Q20: Difference between CSR and SSR**
-
-CSR → Client Side Rendering  
- SSR → Server Side Rendering
-
-Next.js supports both.
-
-# **🏆 Senior-Level Answer (Best One)**
-
-If interviewer asks:
-
-“How would you optimize a slow React app?”
-
-Say:
-
-First, I would use React DevTools Profiler to detect unnecessary re-renders. Then I would optimize using React.memo, useMemo, and useCallback where needed. I would ensure proper key usage, implement lazy loading, virtualize large lists, and minimize state updates.
-
-# **Common Mistake (Very Important)**
-
-Overusing useMemo/useCallback ❌
-
-They also have cost.
-
-Use only when:
-
-* Expensive computation
-
-* Child component wrapped in React.memo
-
-## **Why does React re-render even when state looks same?**
-
-You say:
-
-React compares state and props using shallow comparison. For objects and arrays, even if the values look identical, a new reference causes React to re-render. React does not perform deep comparison for performance reasons.
-
-That answer sounds senior-level.
-
-# **🎯 What is React Lifecycle?**
-
-Lifecycle means:
-
-Different stages a component goes through from creation to removal.
-
-Like human life:
-
-Birth → Growth → Death
-
-In React:
-
-Mount → Update → Unmount
-
-#  **1️⃣ Mounting (Component is created)**
-
-This happens when component first appears on screen.
-
-Example:
-
-```bash
+### **1. Mounting (Birth)**
+Component appears on screen.
+```javascript
 useEffect(() => {
   console.log("Component mounted");
-}, []);
+}, []); // Empty dependency array
 ```
 
-Empty dependency array → runs once after first render.
-
-Use cases:
-
-* API call
-
-* Setup event listener
-
-* Start timer
-
-#  **2️⃣ Updating (Component re-renders)**
-
-Happens when:
-
-* State changes
-
-* Props change
-
-* Parent re-renders
-
-Example:
-
-```bash
+### **2. Updating (Growth)**
+Component re-renders due to state/prop changes.
+```javascript
 useEffect(() => {
   console.log("Count changed");
 }, [count]);
 ```
 
-Runs when `count` changes.
-
-# **3️⃣ Unmounting (Component removed)**
-
-Happens when component disappears.
-
-Example:
-
-```bash
+### **3. Unmounting (Death)**
+Component is removed from screen.
+```javascript
 useEffect(() => {
-  const interval = setInterval(() => {
-    console.log("running");
-  }, 1000);
   return () => {
-    clearInterval(interval);
-    console.log("Component unmounted");
+    console.log("Cleanup: Component unmounted");
   };
 }, []);
 ```
 
-The return function = cleanup function.
+---
 
-Use cases:
+## **8️⃣ Lazy Loading & Optimization**
 
-* Clear timers
-
-* Remove event listeners
-
-* Cancel API requests
-
-# **What is Lazy Loading?**
-
-Lazy loading means:
-
-Load components or code only when needed instead of loading everything at once.
-
-This improves:
-
-* Initial load time 🚀
-
-* Bundle size 📦
-
-* Performance ⚡
-
-# **1️⃣ Lazy Loading in React (React.lazy)**
-
-Used to split code and load components dynamically.
-
-### **Example:**
-
-```bash
-import React, { Suspense } from "react";
+### **Lazy Loading (React.lazy)**
+Load components only when needed to reduce initial bundle size.
+```javascript
 const Dashboard = React.lazy(() => import("./Dashboard"));
 
 function App() {
@@ -322,455 +168,47 @@ function App() {
 }
 ```
 
-### **How it works:**
-
-* `Dashboard` is loaded only when rendered.
-
-* `Suspense` shows fallback while loading.
-
-# **2️⃣ Lazy Loading in Next.js**
-
-Next.js has built-in dynamic import.
-
-Use `next/dynamic`.
-
-### **Example:**
-
-```bash
-import dynamic from "next/dynamic";
-
-const Dashboard = dynamic(() => import("./Dashboard"), {
-  loading: () => <p>Loading...</p>,
-});
-
-export default function Page() {
-  return <Dashboard />;
-}
-```
-
-#  **Best Interview Answer (Short Version)**
-
-If interviewer asks:
-
-“What is lazy loading?”
-
-You say:
-
-Lazy loading is a technique where components are loaded only when needed instead of during initial page load. In React, we use React.lazy with Suspense, and in Next.js, we use next/dynamic to split code and improve performance.
-
-##  **How lazy loading affects SEO**
-
-Lazy loading can affect SEO if important content is not rendered on the server. If search engines cannot see the content during initial page load, it may not be indexed properly.
+### **Tree Shaking**
+Removing unused branches (functions/code) from the final bundle to improve performance.
 
 ---
 
-# **🧠 Why SEO Can Be Affected**
+## **9️⃣ Hydration**
 
-Search engines (like **Google**) crawl the **HTML generated on first load**.
-
-If:
-
-* Content is rendered via SSR → ✅ Good for SEO
-
-* Content is loaded later via JavaScript → ⚠️ Risky
-
-Because:
-
-Some crawlers may not execute JavaScript fully.
-
-#  **What is Hydration?**
-
-**Hydration** is the process where **React “activates” the server-rendered HTML** on the client so it becomes interactive.
-
-* Next.js renders the page **on the server** (SSR/SSG) → sends HTML to browser
-
-* Browser displays the HTML immediately → fast first paint
-
-* React then **hydrates** the HTML → attaches event listeners, makes buttons clickable, forms work, etc.
+The process where React "activates" server-rendered HTML on the client by attaching event listeners.
+* **Flow:** Server sends static HTML → Browser displays it (fast paint) → React hydrates the HTML → Page becomes interactive.
 
 ---
 
-# **🧠 Key Idea**
-
-Think of it like:
-
-1. Server sends a **static page** → user sees content instantly
-
-2. Client runs React → adds **interactivity** → page behaves like normal SPA
-
-Without hydration → page looks fine, but **buttons and events don’t work**.
-
-# **What is Bundle Optimization?**
-
-Bundle optimization is the process of **reducing the size of JavaScript, CSS, and other assets** sent to the browser, so your app loads faster and performs better.
-
-# **1️⃣ Code Splitting / Lazy Loading**
-
-* Split your bundle into smaller chunks
-
-* Load components only when needed
-
-**Next.js Example:**
-
-```bash
-import dynamic from "next/dynamic";
-
-const Dashboard = dynamic(() => import("./Dashboard"), {
-  loading: () => <p>Loading...</p>,
-});
-```
-
-* Dashboard is in a **separate chunk** → only loaded when needed
-
-# **2️⃣ Tree Shaking**
-
-* Remove **unused code** automatically
-
-* Works with ES6 modules (`import { something } from 'lib'`)
-
-Example:
-
-```bash
-import { map } from 'lodash'; // only map is included
-```
-
-* Without tree shaking, entire lodash might get included → bigger bundle
-
-#  **What is Tree Shaking?**
-
-Tree shaking is a process that removes unused JavaScript code from the final bundle.
-
-It helps reduce bundle size and improve performance.
-
----
-
-# **🧠 Why is it called “Tree Shaking”?**
-
-Imagine your code like a tree 🌳
-
-* You only use some branches (functions)
-
-* The unused branches are “shaken off”
-
-Final bundle only contains what you use.
-
-#  **What is React Lifecycle?**
-
-React lifecycle refers to the different stages a component goes through from creation to removal.
-
-Think of it like:
-
-**Birth → Life → Death**
-
-In React:
-
-**Mount → Update → Unmount**
-
-# **1️⃣ Mounting (Component is created)**
-
-This happens when the component appears on the screen for the first time.
-
-### **In Functional Components:**
-
-```bash
-useEffect(() => {
-  console.log("Component Mounted");
-}, []);
-```
-
-* Empty dependency array `[]`
-
-* Runs only once after first render
-
-Common use cases:
-
-* API calls
-
-* Setting up event listeners
-
-* Starting timers
-
-# **2️⃣ Updating (Component re-renders)**
-
-Happens when:
-
-* State changes
-
-* Props change
-
-* Parent re-renders
-
-Example:
-
-```bash
-useEffect(() => {
-  console.log("Count changed");
-}, [count]);
-```
-
-Runs only when `count` changes.
-
-# **3️⃣ Unmounting (Component is removed)**
-
-When component disappears from screen.
-
-Example:
-
-```bash
-useEffect(() => {
-  const timer = setInterval(() => {
-    console.log("Running...");
-  }, 1000);
-  return () => {
-    clearInterval(timer);
-    console.log("Component Unmounted");
-  };
-}, []);
-```
-
-The return function = cleanup function.
-
-Used for:
-
-* Clearing intervals
-
-* Removing event listeners
-
-* Canceling API requests
-
-## **React 19 hooks**
-
-# **`use()`**
-
-### **✅ What it does:**
-
-Allows you to directly use Promises (or context) inside a component.
-
-```bash
+## **🔟 React 19 Features**
+
+### **`use()`**
+Allows reading async resources (like Promises) or Context directly during rendering.
+```javascript
 const data = use(fetchData());
 ```
 
-### **🔥 Why important?**
+### **`useFormStatus()`**
+Accesses submission status (e.g., `pending`) of a form, especially with Server Actions.
 
-* React suspends automatically until promise resolves
-
-* No need for `useEffect + useState`
-
-* Works great with Suspense
-
-### **🧠 Interview line:**
-
-use() lets you read async resources directly during rendering and integrates with Suspense.
-
-```bash
-async function fetchData() {
-  const res = await fetch("https://jsonplaceholder.typicode.com/posts/1");
-  if (!res.ok) {
-    throw new Error("Failed to fetch data");
-  }
-  return res.json();
-}
-
-import { use } from "react";
-
-export default function Page() {
-  const data = use(fetchData());
-  return <h1>{data.title}</h1>;
-}
+### **`useActionState()`**
+A cleaner way to manage form/action state (errors, loading, data).
+```javascript
+const [state, formAction, isPending] = useActionState(createUser, null);
 ```
 
-# **2️⃣ `useFormStatus()`**
-
-Used inside forms (especially with Server Actions).
-
-```bash
-const { pending } = useFormStatus();
-```
-
-### **✅ Gives:**
-
-* `pending` (loading state)
-
-* submission status
-
-No need to manually manage loading state.
-
-### **1️⃣ Server Action**
-
-```bash
-// app/actions.js
-export async function submitForm(formData) {
-  "use server";
-  const name = formData.get("name");
-  // simulate delay
-  await new Promise((res) => setTimeout(res, 2000));
-  console.log(name);
-}
-```
+### **`useOptimistic()`**
+Implements instant UI updates before server confirmation (e.g., chat messages or like buttons).
 
 ---
 
-### **2️⃣ Submit Button Component**
+## **1️⃣1️⃣ Shadow DOM vs Virtual DOM**
 
-```bash
-"use client";
-import { useFormStatus } from "react-dom";
-
-function SubmitButton() {
-  const { pending } = useFormStatus();
-  return (
-    <button type="submit" disabled={pending}>
-      {pending ? "Submitting..." : "Submit"}
-    </button>
-  );
-}
-
-export default SubmitButton;
-```
+* **Virtual DOM:** A React-specific concept (JS object) used for performance optimization.
+* **Shadow DOM:** A native browser technology used for scoping CSS and HTML (Web Components).
 
 ---
 
-### **3️⃣ Form Component**
+## **1️⃣2️⃣ React Strict Mode**
 
-```bash
-import { submitForm } from "./actions";
-import SubmitButton from "./SubmitButton";
-
-export default function Page() {
-  return (
-    <form action={submitForm}>
-      <input name="name" placeholder="Enter name" />
-      <SubmitButton />
-    </form>
-  );
-}
-```
-
-# **3️⃣ `useFormState()`**
-
-Helps manage form results from server actions.
-
-```bash
-const [state, formAction] = useFormState(action, initialState);
-```
-
-### **✅ Used for:**
-
-* Server-side validation errors
-
-* Returning structured form state
-
-Cleaner than managing error state manually.
-
----
-
-# **4️⃣ `useOptimistic()`**
-
-Helps implement **optimistic UI updates**.
-
-```bash
-const [optimisticState, addOptimistic] = useOptimistic(
-  state,
-  (current, newValue) => [...current, newValue]
-);
-```
-
-### **🔥 Example:**
-
-User submits a comment → UI updates instantly → server confirms later.
-
-Very useful in:
-
-* Chat apps
-
-* Like buttons
-
-* Comments
-
-* Notifications
-
----
-
-# **5️⃣ `useActionState()` (Replaces some `useFormState` patterns)**
-
-Helps manage async action state more cleanly.
-
-A hook that helps manage async action state (like form submission) in a clean and structured way.
-
-It replaces many old patterns like:
-
-* `useState` for loading
-
-* `useState` for errors
-
-* manual try/catch handling
-
-* complex form logic
-
-```bash
-const [state, action, isPending] = useActionState(myAction, initialState);
-```
-
-Gives:
-
-* current state
-
-* action function
-
-* loading boolean
-
- 
-
-## **1️⃣ Server Action**
-
-```bash
-// actions.js
-export async function createUser(prevState, formData) {
-  "use server";
-  const email = formData.get("email");
-  if (!email.includes("@")) {
-    return { error: "Invalid email" };
-  }
-  await new Promise((res) => setTimeout(res, 2000));
-  return { success: "User created successfully" };
-}
-```
-
-Notice:
-
-* First argument = `prevState`
-
-* Second = `formData`
-
----
-
-## **2️⃣ Client Component**
-
-```bash
-"use client";
-import { useActionState } from "react";
-import { createUser } from "./actions";
-
-export default function SignupForm() {
-  const [state, formAction, isPending] = useActionState(createUser, null);
-
-  return (
-    <form action={formAction}>
-      <input name="email" placeholder="Enter email" />
-      <button type="submit" disabled={isPending}>
-        {isPending ? "Creating..." : "Create User"}
-      </button>
-      {state?.error && <p style={{ color: "red" }}>{state.error}</p>}
-      {state?.success && <p style={{ color: "green" }}>{state.success}</p>}
-    </form>
-  );
-}
-
-## **Shadow DOM vs Virtual DOM**
-- **What is the difference between Shadow DOM and Virtual DOM?**
-   - **Virtual DOM**: A React-specific concept (a JS object) used for performance optimization.
-   - **Shadow DOM**: A browser technology used for scoping CSS and HTML (e.g., in Web Components).
-
-## **React Strict Mode in Development**
-- **Why does React log twice in Development? (Strict Mode)**
-   - React 18+ intentionally mounts/unmounts/remounts components in Strict Mode to help you find side-effect bugs and ensure your cleanup functions work.
+In development, React 18+ intentionally mounts/unmounts/remounts components to help identify side-effect bugs and ensure cleanup functions are properly implemented.
