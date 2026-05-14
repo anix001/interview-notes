@@ -28,6 +28,8 @@ A deep dive into Node.js architecture, the Event Loop, performance optimization,
 - [1️⃣5️⃣ Real-World Scenarios & System Design](#1️⃣5️⃣-real-world-scenarios--system-design)
 - [1️⃣6️⃣ module.exports vs exports](#1️⃣6️⃣-moduleexports-vs-exports)
 - [1️⃣7️⃣ Handling Uncaught Exceptions](#1️⃣7️⃣-handling-uncaught-exceptions)
+- [1️⃣8️⃣ WebSocket vs HTTPS](#1️⃣8️⃣-websocket-vs-https)
+- [1️⃣9️⃣ How Node.js Handles High Concurrency (The Waiter Analogy)](#1️⃣9️⃣-how-nodejs-handles-high-concurrency-the-waiter-analogy)
 
 ---
 
@@ -199,3 +201,55 @@ Since JWT is stateless, invalidation requires:
 ## **1️⃣7️⃣ Handling Uncaught Exceptions**
 
 Always use `process.on('uncaughtException')` for cleanup, but follow it with `process.exit(1)` and let a process manager like PM2 restart the instance to ensure a clean state.
+
+---
+
+## **1️⃣8️⃣ WebSocket vs HTTPS**
+
+### **Technical Breakdown**
+
+| Feature | HTTPS (Hypertext Transfer Protocol Secure) | WebSocket |
+| :--- | :--- | :--- |
+| **Communication** | Unidirectional (Client-to-Server request) | Bidirectional (Full-duplex) |
+| **Connection** | Short-lived (Stateless) | Long-lived (Persistent) |
+| **Header Overhead** | High (Headers sent with every request) | Low (Headers sent once during handshake) |
+| **Real-time** | Low (Requires polling/long-polling) | High (Instant data push) |
+| **Use Case** | REST APIs, fetching data, static assets | Chat apps, live scores, stock tickers |
+
+### **Interview Scenario: "How would you explain the difference between WebSockets and HTTPS to a non-technical stakeholder?"**
+
+**Answer:**
+Think of **HTTPS** like a **Post Office**. If you want information, you have to send a letter (Request). The server reads it and sends a reply back (Response). Once the reply is delivered, the connection is closed. If you want more info, you have to send another letter.
+
+**WebSockets** are like a **Phone Call**. Once the call is connected (Handshake), the line stays open. Both people can talk at the same time, and you don't have to dial the number again every time you want to say something. It’s perfect for situations where data needs to flow instantly and constantly, like a live chat.
+
+### **How it works in Node.js:**
+1. **Handshake:** The client sends a standard HTTP request with an `Upgrade: websocket` header.
+2. **Upgrade:** If the server supports it, it switches the protocol from HTTP to WebSocket.
+3. **Persistence:** The TCP connection remains open, allowing the server to push data to the client without a new request.
+
+> [!TIP]
+> **Interview Gold:** Use WebSockets when you need **low-latency, real-time updates**. Use HTTPS for standard **CRUD operations** where data doesn't change every second.
+
+---
+
+## **1️⃣9️⃣ How Node.js Handles High Concurrency (The Waiter Analogy)**
+
+**The Question:** "If Node.js is single-threaded, how can it handle thousands of users at once without crashing or slowing down?"
+
+**The Simple Explanation (The Restaurant Analogy):**
+
+Imagine a restaurant with **one waiter** (The Single Thread) and a **kitchen** (The Operating System/Worker Pool).
+
+1. **Standard Approach (Multi-threaded):** Every time a guest arrives, you hire a new waiter. This is expensive and uses a lot of space (Memory/CPU overhead).
+2. **Node.js Approach (Single-threaded Event Loop):**
+   - The waiter takes an order from Table A and sends it to the kitchen.
+   - Instead of standing there waiting for the food, the waiter immediately goes to Table B to take their order.
+   - When the food for Table A is ready, a bell rings (Event), and the waiter goes back to pick it up and deliver it.
+
+**Why it works:** The waiter is never "idle" waiting for the kitchen. They are always moving, taking orders, or delivering food. The "waiting" happens in the kitchen, not by the waiter.
+
+**Core Idea:** Node.js doesn't wait for I/O (Database, File System, Network). It delegates the task and moves to the next request, coming back only when the task is finished.
+
+> [!TIP]
+> **Interview Gold:** This is called **Non-blocking I/O**. It makes Node.js extremely efficient for I/O-heavy applications (like Chat or Streaming) but less ideal for heavy math calculations that would keep the "waiter" stuck at one table for too long.

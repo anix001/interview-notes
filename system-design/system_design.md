@@ -27,6 +27,9 @@ Principles of distributed systems, scalability, and high-level architectural pat
 - [8️⃣ RabbitMQ](#8️⃣-rabbitmq)
 - [9️⃣ Kafka vs RabbitMQ](#9️⃣-kafka-vs-rabbitmq)
 - [🔟 Redis Fundamentals](#🔟-redis-fundamentals)
+- [1️⃣1️⃣ Database Scaling: Replication, Sharding, and Partitioning](#1️⃣1️⃣-database-scaling-replication-sharding-and-partitioning)
+- [1️⃣2️⃣ The CAP Theorem](#1️⃣2️⃣-the-cap-theorem)
+- [1️⃣3️⃣ Database vs Cache Consistency](#1️⃣3️⃣-database-vs-cache-consistency)
 
 ---
 
@@ -155,3 +158,56 @@ Redis is an in-memory data structure store used as a database, cache, and messag
 
 > [!TIP]
 > **Interview Gold:** When designing any system, always address **Single Points of Failure (SPOF)** by introducing redundancy and health checks.
+
+---
+
+## **1️⃣1️⃣ Database Scaling: Replication, Sharding, and Partitioning**
+
+**Question:** "Our database is becoming a bottleneck. How would you scale it to handle more traffic and data?"
+
+**Simple Explanation (The Library Analogy):**
+Imagine a library that is getting too crowded:
+
+1.  **Vertical Scaling (Bigger Server):** You buy a bigger building and hire a faster librarian. It's the simplest fix but has a hard limit—eventually, you can't buy a bigger building.
+2.  **Horizontal Scaling (More Servers):** Instead of one giant building, you decide to use **multiple buildings**. This is how you scale "out" instead of "up." To do this for a database, we use two main methods:
+    *   **Replication (Read Replicas):** You make photocopies of the books and put them in other buildings. People can read the copies (Read), but if you want to add a new book (Write), you must update the master and wait for it to sync with the copies. **Best for read-heavy apps.**
+    *   **Sharding (Data Splitting):** You open different library branches. You put books A-M in Branch 1 and N-Z in Branch 2. Each building has its own data. **Best for scaling both reads and writes when data volume is massive.**
+
+**Related Questions:**
+- **"What is the biggest challenge with Sharding?"** Answer: Complexity. Joining data across shards is very slow, and re-balancing data (re-sharding) is a nightmare.
+- **"When should you NOT shard?"** Answer: When you can still scale vertically or if your application requires complex joins across the data you are splitting.
+
+---
+
+## **1️⃣2️⃣ The CAP Theorem**
+
+**Question:** "What is the CAP theorem and why does it matter?"
+
+**Simple Explanation (The ATM Analogy):**
+CAP stands for **C**onsistency, **A**vailability, and **P**artition Tolerance. The rule is: *In a distributed system, you can only have 2 out of 3.*
+
+Imagine an ATM (Distributed Node) trying to talk to the Bank (The Network):
+1.  **Consistency (C):** Every time you check your balance, it's 100% correct across all ATMs.
+2.  **Availability (A):** The ATM always gives you money, even if it can't talk to the bank.
+3.  **Partition Tolerance (P):** The system keeps working even if the connection between the ATM and the Bank is broken.
+
+**The Trade-off:** If the connection breaks (Partition), you must choose:
+-   **CP (Consistency over Availability):** The ATM refuses to give you money because it doesn't know your exact balance. (e.g., Banking systems).
+-   **AP (Availability over Consistency):** The ATM gives you money anyway, but it might be wrong. You'll fix it later when the connection returns. (e.g., Social media likes).
+
+---
+
+## **1️⃣3️⃣ Database vs Cache Consistency**
+
+**Question:** "How do you ensure your Redis cache doesn't have old data compared to your DB?"
+
+**Simple Explanation:**
+1.  **Cache-Aside (Most Common):** The app checks the cache. If it's a "miss," it reads from the DB and writes to the cache. To keep it fresh, you **delete** the cache entry whenever you update the DB.
+2.  **Write-Through:** The app writes to the cache, and the cache *immediately* updates the DB. Data is never stale, but writes are slower.
+3.  **Write-Back:** The app writes only to the cache. The cache updates the DB later in a batch. Extremely fast, but if the cache crashes before the update, you lose data.
+
+**Related Question:** "Why should you DELETE the cache instead of UPDATING it on a DB write?"
+**Answer:** To avoid race conditions. If two updates happen at once, the order in the cache might end up different from the DB. Deleting it forces a fresh, correct read next time.
+
+> [!TIP]
+> **Interview Gold:** For mid-level roles, always mention **"Eventual Consistency"**. Most modern systems don't need absolute consistency; it's okay if a "Like" count takes a few seconds to update across the globe.
