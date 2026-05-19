@@ -20,6 +20,7 @@ A curated collection of organized notes and real-world interview questions for s
 - [☁️ **AWS**](./aws/aws.md)
 - [🗄️ **Database**](./db/db.md)
 - [💾 **SQL**](./sql/sql.md)
+- [🤝 **HR Interview**](./hr/hr.md)
 
 ---
 *Created for developers, by developers. Good luck with your interview!*

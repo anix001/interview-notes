@@ -10,6 +10,7 @@ The project is structured by technical domain, with each directory containing a 
 - **`aws/`**: Amazon Web Services (EC2, S3, Lambda, Cloud Computing).
 - **`db/`**: Databases (Indexing, ACID, Sharding, NoSQL).
 - **`design-pattern/`**: Software Design Patterns (MVC, structural patterns).
+- **`hr/`**: HR Interview Preparation (Common questions, Soft Skills).
 - **`js/`**: JavaScript Fundamentals (Closures, Hoisting, Promises, ES6+).
 - **`node/`**: Node.js (Event Loop, Streams, Worker Threads, Security).
 - **`react/`**: React (Virtual DOM, Hooks, Reconciliation, React 19).

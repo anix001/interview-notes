@@ -29,6 +29,9 @@ Explore topics by category to start your preparation:
 - [🗄️ **Database**](./db/db.md) — Indexing, ACID, Sharding, and MongoDB.
 - [💾 **SQL**](./sql/sql.md) — Complex Queries, Joins, and Optimization.
 
+### 🤝 Soft Skills
+- [🤝 **HR Interview**](./hr/hr.md) — "Tell me about yourself", "Why change?", and more.
+
 ---
 
 > [!TIP]
