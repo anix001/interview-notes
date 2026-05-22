@@ -18,6 +18,7 @@ Explore topics by category to start your preparation:
 - [📜 **JavaScript**](./js/js.md) — Closures, Hoisting, Promises, and modern ES6+.
 - [🟢 **Node.js**](./node/node.md) — Event Loop, Streams, Worker Threads, and Security.
 - [⚛️ **React**](./react/react.md) — Virtual DOM, Hooks, Reconciliation, and React 19.
+- [▲ **Next.js**](./nextjs/nextjs.md) — App Router, Server Components, SSR/SSG/ISR, and Caching.
 
 ### 🏗️ Architecture & AI
 - [🤖 **Artificial Intelligence**](./ai/ai.md) — MCP, Agentic AI, RAG, and LLM fundamentals.
@@ -28,6 +29,9 @@ Explore topics by category to start your preparation:
 - [☁️ **AWS**](./aws/aws.md) — EC2, S3, Lambda, and Cloud Computing.
 - [🗄️ **Database**](./db/db.md) — Indexing, ACID, Sharding, and MongoDB.
 - [💾 **SQL**](./sql/sql.md) — Complex Queries, Joins, and Optimization.
+
+### 🤝 Soft Skills
+- [🤝 **HR Interview**](./hr/hr.md) — "Tell me about yourself", "Why change?", and more.
 
 ---
 
