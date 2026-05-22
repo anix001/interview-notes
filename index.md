@@ -18,6 +18,7 @@ Explore topics by category to start your preparation:
 - [📜 **JavaScript**](./js/js.md) — Closures, Hoisting, Promises, and modern ES6+.
 - [🟢 **Node.js**](./node/node.md) — Event Loop, Streams, Worker Threads, and Security.
 - [⚛️ **React**](./react/react.md) — Virtual DOM, Hooks, Reconciliation, and React 19.
+- [▲ **Next.js**](./nextjs/nextjs.md) — App Router, Server Components, SSR/SSG/ISR, and Caching.
 
 ### 🏗️ Architecture & AI
 - [🤖 **Artificial Intelligence**](./ai/ai.md) — MCP, Agentic AI, RAG, and LLM fundamentals.

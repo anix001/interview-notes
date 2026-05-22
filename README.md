@@ -14,6 +14,7 @@ A curated collection of organized notes and real-world interview questions for s
 - [📜 **JavaScript**](./js/js.md)
 - [🟢 **Node.js**](./node/node.md)
 - [⚛️ **React**](./react/react.md)
+- [▲ **Next.js**](./nextjs/nextjs.md)
 - [🤖 **Artificial Intelligence**](./ai/ai.md)
 - [🏗️ **System Design**](./system-design/system_design.md)
 - [🎨 **Design Patterns**](./design-pattern/design_pattern.md)

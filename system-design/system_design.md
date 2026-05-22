@@ -82,6 +82,26 @@ An e-commerce backend must handle complex transactions and consistency:
 * **Transactions**: Use the **Saga pattern** to ensure reliability across microservices.
 * **Performance**: Cache product listings and use a **CDN** for static assets and images.
 
+**What is the Saga Pattern?**
+In a microservices system, you can't use a single database transaction across multiple services. The Saga pattern breaks a multi-step business transaction into a sequence of local transactions, each publishing an event for the next step. If one step fails, compensating transactions undo the previous steps.
+
+```
+Order Saga — "Place an order" across 3 services:
+
+Step 1: Order Service    → creates order (status: pending)
+         ↓ success event
+Step 2: Inventory Service → reserves items
+         ↓ success event
+Step 3: Payment Service  → charges card
+         ↓ success event
+        Order confirmed!
+
+If Payment fails:
+Step 3 FAILS → Payment publishes "payment-failed" event
+Step 2 runs COMPENSATING transaction → releases reserved items
+Step 1 runs COMPENSATING transaction → cancels order
+```
+
 ---
 
 ## **5️⃣ How do you handle a slow API in production?**
@@ -99,7 +119,7 @@ An e-commerce backend must handle complex transactions and consistency:
 
 **Answer:**
 Migration should be gradual to minimize risk:
-* **Strangler Fig Pattern**: Gradually extract features into separate services instead of a "big bang" rewrite.
+* **Strangler Fig Pattern**: Gradually extract features into separate services instead of a "big bang" rewrite. Named after a fig tree that slowly grows around and replaces a host tree — your new microservices wrap the monolith and take over one feature at a time until the monolith is retired.
 * **Start Small**: Begin with less critical modules like notifications or search.
 * **Define Boundaries**: Establish clear service boundaries and use API-based communication.
 * **Gradual Transition**: Maintain the monolith while slowly redirecting traffic to new services.
@@ -119,6 +139,24 @@ Migration should be gradual to minimize risk:
     * **Broker**: A Kafka server that stores and serves data.
     * **Consumer Group**: A group of consumers working together to process data.
 
+**How a message flows through Kafka (simple example):**
+```
+Order placed on website
+       ↓
+Producer (Order Service) → publishes to Topic: "order-events"
+                                    ↓
+                    Kafka stores it in a Partition (durable log)
+                                    ↓
+Consumer Group A (Inventory Service) ← reads & reserves stock
+Consumer Group B (Email Service)     ← reads & sends confirmation email
+Consumer Group C (Analytics)         ← reads & updates dashboard
+
+Key point: Both services read the SAME message independently.
+Kafka doesn't delete the message after one consumer reads it.
+```
+
+**Why partitions?** Each partition can be consumed by one consumer in a group — so with 3 partitions you can run 3 consumers in parallel, tripling throughput.
+
 ---
 
 ## **8️⃣ What is RabbitMQ and how does it work?**
@@ -127,10 +165,10 @@ Migration should be gradual to minimize risk:
 **RabbitMQ** is a message broker that supports complex routing logic.
 * **Core Idea**: Producers -> **Exchange** -> **Queues** (based on **Bindings**) -> Consumers.
 * **Exchange Types**:
-    * **Direct**: Exact routing key match.
-    * **Fanout**: Broadcasts to all bound queues.
-    * **Topic**: Wildcard patterns in routing keys.
-    * **Headers**: Uses message headers for routing.
+    * **Direct**: Exact routing key match. *(Use for: specific task routing — "process payment" only goes to payment queue)*
+    * **Fanout**: Broadcasts to all bound queues. *(Use for: notifications to multiple services — every service gets a copy)*
+    * **Topic**: Wildcard patterns in routing keys. *(Use for: "send to all EU-related queues" — `eu.*` matches eu.orders, eu.users)*
+    * **Headers**: Uses message headers for routing. *(Rarely used — complex, prefer Topic)*
 
 ---
 
@@ -142,6 +180,12 @@ Migration should be gradual to minimize risk:
 | **Persistence** | Durable (Retains messages) | Transient (Deletes after ack) |
 | **Throughput** | Extremely High | High |
 | **Best For** | Event streaming, Analytics | Task queues, Microservice communication |
+
+**Pull vs Push — what does it mean?**
+* **Kafka (Pull):** Consumers ask Kafka "give me the next message." Consumers control their own pace — a slow consumer just reads slower, it doesn't crash Kafka.
+* **RabbitMQ (Push):** RabbitMQ pushes messages to consumers as fast as they arrive. Faster delivery, but a slow consumer can get overwhelmed and queue up messages.
+
+**Simple rule:** Use **Kafka** when you need event history, high throughput, or multiple independent consumers reading the same events. Use **RabbitMQ** when you need reliable task queues with complex routing and message acknowledgement.
 
 ---
 
@@ -211,3 +255,75 @@ Imagine an ATM (Distributed Node) trying to talk to the Bank (The Network):
 
 > [!TIP]
 > **Interview Gold:** For mid-level roles, always mention **"Eventual Consistency"**. Most modern systems don't need absolute consistency; it's okay if a "Like" count takes a few seconds to update across the globe.
+
+---
+
+## **1️⃣4️⃣ Rate Limiting Algorithms**
+
+Rate limiting controls how many requests a client can make in a time window to protect your system from abuse.
+
+### **Fixed Window**
+* Allow N requests per minute. Counter resets at the top of every minute.
+* **Problem:** A user can send N requests at 11:59 and N more at 12:00 — double the limit at the boundary.
+
+### **Sliding Window**
+* Tracks requests over a rolling window (last 60 seconds, not "this minute").
+* Smoother — no boundary spikes. Slightly more memory.
+
+### **Token Bucket** *(most popular)*
+* Each user has a bucket holding up to N tokens. Each request costs 1 token. Tokens refill at a steady rate.
+* Allows **short bursts** (empty the bucket fast) but enforces a long-term average rate.
+
+### **Leaky Bucket**
+* Requests go into a queue (bucket). The queue is drained at a fixed rate.
+* Smooths out bursts completely — output rate is always constant.
+
+> [!TIP]
+> **Interview Gold:** Token Bucket is the most common choice because it allows natural bursts (a user opening your app) while still enforcing limits. Redis is the standard storage for distributed rate limiting counters.
+
+---
+
+## **1️⃣5️⃣ Circuit Breaker Pattern**
+
+**What it is:** A pattern that stops calling a failing service and returns a fallback immediately, preventing a slow or broken dependency from cascading failure through your whole system.
+
+### **Three states**
+1. **Closed (normal):** Requests pass through. If failures exceed a threshold → trips to Open.
+2. **Open (tripped):** All requests fail immediately with a fallback. No real calls made. After a timeout → moves to Half-Open.
+3. **Half-Open (testing):** Lets a few requests through. If they succeed → back to Closed. If they fail → back to Open.
+
+### **Simple analogy**
+Think of it like an electrical circuit breaker. When too much current flows (too many failures), the breaker trips (Open state) to protect the circuit. After a cooldown, it resets and tries again.
+
+```
+Normal → Failure threshold hit → Circuit OPEN (return fallback immediately)
+     ↑                                      ↓ (after timeout)
+     ←──── Successes ────── Half-Open (test a few requests)
+```
+
+> [!TIP]
+> **Interview Gold:** Without a circuit breaker, one slow microservice can cause all your other services to pile up waiting, eventually crashing the entire system. The circuit breaker is the "fail fast, recover gracefully" pattern.
+
+---
+
+## **1️⃣6️⃣ Consistent Hashing**
+
+**The problem:** In a standard cache cluster with N servers, you use `hash(key) % N` to decide which server stores a key. If you add or remove a server, N changes — and almost **every key remaps to a different server**, causing a massive cache miss storm.
+
+**Consistent Hashing solution:**
+* Place both servers and keys on a virtual ring (0 to 2³² − 1).
+* A key is stored on the **first server clockwise** from its position on the ring.
+* When a server is added/removed, only the keys on the adjacent arc need to move — roughly `1/N` of all keys instead of almost all of them.
+
+```
+Ring:  [Server A]---[Key "user:1"]---[Server B]---[Key "user:2"]---[Server C]
+
+"user:1" maps to Server B (first server clockwise)
+If Server B is removed, "user:1" remaps to Server C — other keys unaffected.
+```
+
+### **Virtual nodes**
+Real systems give each server multiple positions (virtual nodes) on the ring for more even load distribution.
+
+> [!TIP]
+> **Interview Gold:** Consistent hashing is used in **distributed caches** (Redis Cluster, Memcached), **CDNs**, and **database sharding** (Cassandra, DynamoDB). Mention it when asked "how do you add servers to a cache cluster without a thundering herd?"
